@@ -1,0 +1,21 @@
+{
+  "name": "@remy/snyk-module",
+  "version": "1.0.0",
+  "description": "Module helper",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tape test/*.test.js | tap-spec"
+  },
+  "author": "Remy Sharp",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "tap-spec": "^4.0.2",
+    "tape": "^4.1.0"
+  },
+  "dependencies": {
+    "debug": "^2.2.0"
+  }
+}
