@@ -18,7 +18,7 @@
   "devDependencies": {
     "tap-spec": "^4.0.2",
     "tape": "^4.1.0",
-    "semantic-release": "^6.0.1"
+    "semantic-release": "^4.3.5"
   },
   "dependencies": {
     "debug": "^2.2.0"
