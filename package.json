@@ -1,5 +1,5 @@
 {
-  "name": "@snyk/module",
+  "name": "snyk-module",
   "description": "Module helper",
   "main": "lib/index.js",
   "directories": {
