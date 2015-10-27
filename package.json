@@ -10,7 +10,7 @@
     "url": "https://github.com/Snyk/module.git"
   },
   "scripts": {
-    "test": "snyk test -q && tape test/*.test.js | tap-spec",
+    "test": "snyk test && tape test/*.test.js | tap-spec",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Remy Sharp",
