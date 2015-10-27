@@ -14,7 +14,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Remy Sharp",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "devDependencies": {
     "tap-spec": "^4.0.2",
     "tape": "^4.1.0",
