@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "semantic-release": "^4.3.5",
-    "snyk": "^0.3.2",
+    "snyk": "^1.1.0",
     "tap-spec": "^4.0.2",
     "tape": "^4.1.0"
   },
