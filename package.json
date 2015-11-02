@@ -10,15 +10,16 @@
     "url": "https://github.com/Snyk/module.git"
   },
   "scripts": {
-    "test": "tape test/*.test.js | tap-spec",
+    "test": "snyk test && tape test/*.test.js | tap-spec",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Remy Sharp",
   "license": "Apache-2.0",
   "devDependencies": {
+    "semantic-release": "^4.3.5",
+    "snyk": "^1.1.0",
     "tap-spec": "^4.0.2",
-    "tape": "^4.1.0",
-    "semantic-release": "^4.3.5"
+    "tape": "^4.1.0"
   },
   "dependencies": {
     "debug": "^2.2.0"
