@@ -10,7 +10,8 @@
     "url": "https://github.com/Snyk/module.git"
   },
   "scripts": {
-    "test": "snyk test && tape test/*.test.js | tap-spec",
+    "lint": "jscs lib/*.js -v",
+    "test": "npm run lint && tap test/*.test.js --cov --timeout=60",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Remy Sharp",
@@ -18,7 +19,7 @@
   "devDependencies": {
     "semantic-release": "^4.3.5",
     "snyk": "^1.1.0",
-    "tap-spec": "^4.0.2",
+    "tap": "^5.0.1",
     "tape": "^4.1.0"
   },
   "dependencies": {
