@@ -11,6 +11,7 @@
   },
   "scripts": {
     "lint": "jscs lib/*.js -v",
+    "cover": "tap test/*.test.js --cov --coverage-report=lcov",
     "test": "npm run lint && tap test/*.test.js --cov --timeout=60",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -20,10 +21,11 @@
     "jscs": "^2.8.0",
     "semantic-release": "^4.3.5",
     "snyk": "^1.1.0",
-    "tap": "^5.0.1",
-    "tape": "^4.1.0"
+    "tap": "^5.0.1"
   },
   "dependencies": {
-    "debug": "^2.2.0"
+    "debug": "^2.2.0",
+    "hosted-git-info": "^2.1.4",
+    "validate-npm-package-name": "^2.2.2"
   }
 }
