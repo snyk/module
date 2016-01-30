@@ -4,9 +4,17 @@ var mod = require('../');
 test('module string to object', function (t) {
   t.deepEqual(mod('nodemon'), { name: 'nodemon', version: '*' }, 'supports versionless');
   t.deepEqual(mod('nodemon@1'), { name: 'nodemon', version: '1' }, 'with version');
+  t.deepEqual(mod('nodemon@1.0'), { name: 'nodemon', version: '1.0' }, 'with version');
+  t.deepEqual(mod('nodemon@1.0.0'), { name: 'nodemon', version: '1.0.0' }, 'with version');
+
   t.deepEqual(mod('@remy/snyk-module'), { name: '@remy/snyk-module', version: '*' }, 'private packages');
   t.deepEqual(mod('jsbin/jsbin'), { name: 'jsbin', version: 'jsbin/jsbin' }, 'short github works');
 
+  [
+    'a@1'
+  ].forEach(function (str) {
+    t.ok(mod(str), str + ' parsed ok');
+  });
 
   var urls = [
     'https://github.com/remy/undefsafe',
@@ -30,11 +38,11 @@ test('module string to object', function (t) {
 
   t.throws(function () {
     mod('/');
-  }, /supported: invalid package name/, 'catch invalid package name');
+  }, /invalid package name/, 'catch invalid package name');
 
   t.throws(function () {
     mod('  *');
-  }, /supported: invalid package name/, 'catch invalid package name');
+  }, /invalid package name/, 'catch invalid package name');
 
 
   t.throws(function () {
