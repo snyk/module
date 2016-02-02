@@ -11,7 +11,8 @@ test('module string to object', function (t) {
   t.deepEqual(mod('jsbin/jsbin'), { name: 'jsbin', version: 'jsbin/jsbin' }, 'short github works');
 
   [
-    'a@1'
+    'a@1',
+    'url',
   ].forEach(function (str) {
     t.ok(mod(str), str + ' parsed ok');
   });
