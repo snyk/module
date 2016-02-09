@@ -3,6 +3,8 @@ var mod = require('../');
 
 test('module string to object', function (t) {
   t.deepEqual(mod('nodemon'), { name: 'nodemon', version: '*' }, 'supports versionless');
+  t.deepEqual(mod('nodemon@latest'), { name: 'nodemon', version: '*' }, 'switches latest to *');
+  t.deepEqual(mod('nodemon@'), { name: 'nodemon', version: '*' }, 'always give a version');
   t.deepEqual(mod('nodemon@1'), { name: 'nodemon', version: '1' }, 'with version');
   t.deepEqual(mod('nodemon@1.0'), { name: 'nodemon', version: '1.0' }, 'with version');
   t.deepEqual(mod('nodemon@1.0.0'), { name: 'nodemon', version: '1.0.0' }, 'with version');
