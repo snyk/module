@@ -7,7 +7,11 @@ Parses a string module name into an object, and tests for Snyk support.
 
 See [tests](https://github.com/Snyk/module/blob/4a1055822a33b4294bd28e3502135e1153c06a46/test/index.test.js) for examples.
 
-Note that at this time the following are not supported in Snyk:
+## Testing manually
 
-- Private npm modules
-- External modules, i.e. those loaded over http or git
+You can use this module from the terminal whilst inside the root of the repo directory:
+
+```bash
+$ node . foo@3
+{ name: "foo", version: 3 }
+```

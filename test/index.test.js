@@ -12,6 +12,9 @@ test('module string to object', function (t) {
   t.deepEqual(mod('@remy/snyk-module'), { name: '@remy/snyk-module', version: '*' }, 'private packages');
   t.deepEqual(mod('jsbin/jsbin'), { name: 'jsbin', version: 'jsbin/jsbin' }, 'short github works');
 
+  t.deepEqual(mod('jsbin', 1), { name: 'jsbin', version: '1' }, 'version arg works');
+  t.deepEqual(mod('@remy/jsbin', 1), { name: '@remy/jsbin', version: '1' }, 'scoped with version arg works');
+
   [
     'a@1',
     'url',
