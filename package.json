@@ -15,13 +15,21 @@
     "test": "npm run lint && tap test/*.test.js --cov --timeout=60",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
+  "config": {
+    "ghooks": {
+      "commit-msg": "validate-commit-msg",
+      "pre-push": "npm test"
+    }
+  },
   "author": "Remy Sharp",
   "license": "Apache-2.0",
   "devDependencies": {
+    "ghooks": "^1.0.3",
     "jscs": "^2.8.0",
     "semantic-release": "^4.3.5",
     "snyk": "^1.1.0",
-    "tap": "^5.0.1"
+    "tap": "^5.0.1",
+    "validate-commit-message": "^3.0.1"
   },
   "dependencies": {
     "debug": "^2.2.0",
