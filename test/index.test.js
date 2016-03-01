@@ -10,8 +10,6 @@ test('module string to object', function (t) {
   t.deepEqual(mod('nodemon@1.0.0'), { name: 'nodemon', version: '1.0.0' }, 'with version');
 
   t.deepEqual(mod('@remy/snyk-module'), { name: '@remy/snyk-module', version: '*' }, 'private packages');
-  t.deepEqual(mod('jsbin/jsbin'), { name: 'jsbin', version: 'jsbin/jsbin' }, 'short github works');
-
   t.deepEqual(mod('jsbin', 1), { name: 'jsbin', version: '1' }, 'version arg works');
   t.deepEqual(mod('@remy/jsbin', 1), { name: '@remy/jsbin', version: '1' }, 'scoped with version arg works');
 
@@ -31,14 +29,24 @@ test('module string to object', function (t) {
     'remy/undefsafe',
   ];
 
+  urls = urls.reduce(function (acc, curr) {
+    acc.push(curr);
+    if (curr.indexOf('@') === -1) {
+      acc.push('undefsafe@' + curr);
+    }
+    return acc;
+  }, []);
+
   var expect = {
     name: 'undefsafe',
     version: 'remy/undefsafe',
   };
 
   urls.forEach(function (url) {
-    t.deepEqual(mod(url), expect, 'short github works');
+    t.deepEqual(mod(url), expect, url + ' works');
   });
+
+  t.deepEqual(mod('jsbin/jsbin'), { name: 'jsbin', version: 'jsbin/jsbin' }, 'short github works');
 
   t.deepEqual(mod(urls[0] + '#123'), { name: 'undefsafe', version: 'remy/undefsafe#123'}, 'add hash correctly');
 
@@ -56,10 +64,13 @@ test('module string to object', function (t) {
   }, /requires string/, 'requires args');
 
 
-  // usernames on git urls aren't supported (unsure if this is 100% right tho)
-  t.throws(function () {
-    mod('grunt-sails-linker@git://github.com/Zolmeister/grunt-sails-linker.git');
-  }, /not supported: external module/, 'external not supported');
+  // pkg names
+  t.deepEqual(
+    mod('grunt-sails-linker@git://github.com/Zolmeister/grunt-sails-linker.git'),
+    {
+      name: 'grunt-sails-linker',
+      version: 'Zolmeister/grunt-sails-linker'
+    }, 'package + giturl as version works');
 
   // privately hosted git repo not supported
   t.throws(function () {
