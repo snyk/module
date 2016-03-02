@@ -80,6 +80,23 @@ test('module string to object', function (t) {
   t.end();
 });
 
+test('loose parsing', function (t) {
+  var opts = { loose: true };
+
+  t.deepEqual(
+    mod('grunt-sails-linker@git://github.com/Zolmeister/grunt-sails-linker.git', opts),
+    {
+      name: 'grunt-sails-linker',
+      version: 'Zolmeister/grunt-sails-linker'
+    }, 'package + giturl as version works');
+
+  // privately hosted git repo not supported
+  t.deepEqual(mod('ikt@git+http://ikt.pm2.io/ikt.git#master', opts),
+    { name: 'ikt', version: '*' }, 'loose allows non-supported parsing');
+
+  t.end();
+});
+
 test('encoding', function (t) {
   t.equal(mod.encode('snyk'), 'snyk', 'vanilla strings unaffected');
   t.equal(mod.encode('@snyk/config'), '@snyk%2Fconfig', 'slash is escaped');
