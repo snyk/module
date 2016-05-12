@@ -97,6 +97,29 @@ test('loose parsing', function (t) {
   t.end();
 });
 
+test('vanilla urls from github', function (t) {
+  var urls = [
+    'https://github.com/Snyk/module/tree/v1.6.0',
+    'https://github.com/Snyk/module',
+    'https://github.com/Snyk/module/tree/master',
+    'https://github.com/Snyk/module/commit/fc0ac92416fe330cb9d13b6cdefa007de81885ad'
+  ];
+
+  var expect = [
+    { name: 'module', version: 'snyk/module#v1.6.0' },
+    { name: 'module', version: 'snyk/module' },
+    { name: 'module', version: 'snyk/module#master' },
+    { name: 'module', version: 'snyk/module#fc0ac92416fe330cb9d13b6cdefa007de81885ad' },
+  ]
+
+  urls.forEach(function (url, i) {
+    debugger;
+    t.deepEqual(mod(url), expect[i], url + ' works');
+  });
+
+  t.end();
+});
+
 test('encoding', function (t) {
   t.equal(mod.encode('snyk'), 'snyk', 'vanilla strings unaffected');
   t.equal(mod.encode('@snyk/config'), '@snyk%2Fconfig', 'slash is escaped');

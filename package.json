@@ -1,6 +1,6 @@
 {
   "name": "snyk-module",
-  "description": "Module helper",
+  "description": "Snyk module helper",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
@@ -19,6 +19,21 @@
     "ghooks": {
       "commit-msg": "validate-commit-msg",
       "pre-push": "npm test"
+    },
+    "validate-commit-msg": {
+      "types": [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "chore",
+        "revert"
+      ],
+      "warnOnFail": false,
+      "maxSubjectLength": 100
     }
   },
   "author": "Remy Sharp",
@@ -26,10 +41,11 @@
   "devDependencies": {
     "ghooks": "^1.0.3",
     "jscs": "^2.8.0",
+    "node-notifier": "^4.5.0",
     "semantic-release": "^4.3.5",
     "snyk": "^1.1.0",
     "tap": "^5.0.1",
-    "validate-commit-message": "^3.0.1"
+    "validate-commit-msg": "^2.1.0"
   },
   "dependencies": {
     "debug": "^2.2.0",
