@@ -113,7 +113,6 @@ test('vanilla urls from github', function (t) {
   ]
 
   urls.forEach(function (url, i) {
-    debugger;
     t.deepEqual(mod(url), expect[i], url + ' works');
   });
 
