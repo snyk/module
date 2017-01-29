@@ -145,6 +145,12 @@ test('Maven modules', function(t) {
     {name: packageName, version: '3.4.5'});
 
   try {
+    mod(groupId, {packageManager: 'maven'});
+  } catch(e) {
+    t.equal(e.message, 'invalid Maven package name: ' + groupId);
+  }
+
+  try {
     mod(packageName);
   } catch(e) {
     t.equal(e.message,
