@@ -124,3 +124,40 @@ test('encoding', function (t) {
   t.equal(mod.encode('@snyk/config'), '@snyk%2Fconfig', 'slash is escaped');
   t.end();
 });
+
+test('Maven modules', function(t) {
+  var groupId = 'org.apache.httpcomponents';
+  var artifactId = 'httpcomponents-core';
+  var packageName = groupId + ':' + artifactId;
+
+  t.equal(mod.encode(packageName), groupId + '%3A' + artifactId);
+
+  t.deepEqual(mod(packageName, {packageManager: 'maven'}),
+    {name: packageName, version: '*'});
+
+  t.deepEqual(mod(packageName, '3.4.5', {packageManager: 'maven'}),
+    {name: packageName, version: '3.4.5'});
+
+  t.deepEqual(mod(packageName, '3.4.5-SNAPSHOT', {packageManager: 'maven'}),
+    {name: packageName, version: '3.4.5-SNAPSHOT'});
+
+  t.deepEqual(mod(packageName + '@3.4.5', {packageManager: 'maven'}),
+    {name: packageName, version: '3.4.5'});
+
+  try {
+    mod(groupId, {packageManager: 'maven'});
+  } catch(e) {
+    t.equal(e.message, 'invalid Maven package name: ' + groupId);
+  }
+
+  try {
+    mod(packageName);
+  } catch(e) {
+    t.equal(e.message,
+      'invalid package name: ' +
+      groupId + ':' + artifactId +
+      ', errors: name can only contain URL-friendly characters');
+  }
+
+  t.end();
+});
