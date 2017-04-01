@@ -51,15 +51,6 @@ test('module string to object', function (t) {
   t.deepEqual(mod(urls[0] + '#123'), { name: 'undefsafe', version: 'remy/undefsafe#123'}, 'add hash correctly');
 
   t.throws(function () {
-    mod('/');
-  }, /invalid package name/, 'catch invalid package name');
-
-  t.throws(function () {
-    mod('  *');
-  }, /invalid package name/, 'catch invalid package name');
-
-
-  t.throws(function () {
     mod();
   }, /requires string/, 'requires args');
 
@@ -99,10 +90,10 @@ test('loose parsing', function (t) {
 
 test('vanilla urls from github', function (t) {
   var urls = [
-    'https://github.com/Snyk/module/tree/v1.6.0',
-    'https://github.com/Snyk/module',
-    'https://github.com/Snyk/module/tree/master',
-    'https://github.com/Snyk/module/commit/fc0ac92416fe330cb9d13b6cdefa007de81885ad'
+    'https://github.com/snyk/module/tree/v1.6.0',
+    'https://github.com/snyk/module',
+    'https://github.com/snyk/module/tree/master',
+    'https://github.com/snyk/module/commit/fc0ac92416fe330cb9d13b6cdefa007de81885ad'
   ];
 
   var expect = [
