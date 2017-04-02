@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
-    "hosted-git-info": "^2.1.4",
-    "validate-npm-package-name": "^2.2.2"
+    "hosted-git-info": "^2.1.4"
   }
 }
