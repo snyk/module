@@ -63,10 +63,14 @@ test('module string to object', function (t) {
       version: 'Zolmeister/grunt-sails-linker'
     }, 'package + giturl as version works');
 
-  // privately hosted git repo not supported
-  t.throws(function () {
-    mod('ikt@git+http://ikt.pm2.io/ikt.git#master');
-  }, /not supported: external module/, 'external not supported');
+  // privately hosted git repo is supported
+  t.deepEqual(mod('ikt@git+http://ikt.pm2.io/ikt.git#master'),
+    { name: 'ikt', version: 'git+http://ikt.pm2.io/ikt.git#master' },
+    'external not supported');
+
+  t.deepEqual(mod('ikt@git+http://git@ikt.pm2.io/ikt.git#master'),
+    { name: 'ikt', version: 'git+http://git@ikt.pm2.io/ikt.git#master' },
+    'external not supported');
 
   t.end();
 });
