@@ -7,48 +7,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Snyk/module.git"
+    "url": "https://github.com/snyk/module.git"
   },
   "scripts": {
-    "lint": "jscs lib/*.js -v",
-    "cover": "tap test/*.test.js --cov --coverage-report=lcov",
-    "test": "npm run lint && tap test/*.test.js --cov --timeout=60",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
-  },
-  "config": {
-    "ghooks": {
-      "commit-msg": "validate-commit-msg",
-      "pre-push": "npm test"
-    },
-    "validate-commit-msg": {
-      "types": [
-        "feat",
-        "fix",
-        "docs",
-        "style",
-        "refactor",
-        "perf",
-        "test",
-        "chore",
-        "revert"
-      ],
-      "warnOnFail": false,
-      "maxSubjectLength": 100
-    }
+    "lint": "eslint -c .eslintrc lib",
+    "test": "npm run lint && tap test/*.test.js -R spec --timeout=60"
   },
   "author": "Remy Sharp",
   "license": "Apache-2.0",
   "devDependencies": {
-    "ghooks": "^1.0.3",
-    "jscs": "^2.8.0",
-    "node-notifier": "^4.5.0",
-    "semantic-release": "^4.3.5",
-    "snyk": "^1.1.0",
-    "tap": "^5.0.1",
-    "validate-commit-msg": "^2.1.0"
+    "eslint": "^4.0.0",
+    "tap": "^12.0.1"
   },
   "dependencies": {
     "debug": "^3.1.0",
-    "hosted-git-info": "^2.1.4"
+    "hosted-git-info": "^2.7.1"
   }
 }
