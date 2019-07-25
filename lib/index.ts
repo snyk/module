@@ -1,25 +1,40 @@
-module.exports = moduleToObject;
-module.exports.encode = encode;
+const debug = require('debug')('snyk:module');
+import * as gitHost from 'hosted-git-info';
 
-var debug = require('debug')('snyk:module');
-var gitHost = require('hosted-git-info');
+interface Package {
+  name: string;
+  version: string;
+}
+
+interface Options {
+  loose?: boolean;
+  packageManager?: string;
+}
+
+export default parsePackageString;
 
 /**
- * Converts a string module name to an object
- * @param  {String} str     Required module name (can also include @version)
- * @param  {String} version Optional version
- * @param  {Object} options { loose: Boolean }
- * @return {Object}         Containing .name & .version properties
+ * Parses a string package id (name + optional version) to an object.
+ *
+ * This method used to be named `moduleToObject`.
  */
-function moduleToObject(str, version, options) {
-  if (!str) {
+export function parsePackageString(
+  nameAndMaybeVersion: string,
+  versionOrOptions?: string | Options,
+  options?: Options
+): Package {
+  if (!nameAndMaybeVersion) {
     throw new Error('requires string to parse into module');
   }
 
-  if (version && !options && typeof version === 'object') {
-    options = version;
-    version = null;
+  let version: string | undefined;
+  if (versionOrOptions && !options && typeof versionOrOptions === 'object') {
+    options = versionOrOptions;
+  } else {
+    version = versionOrOptions as string | undefined;
   }
+
+  let str = nameAndMaybeVersion;
 
   if (version && str.lastIndexOf('@') < 1) {
     debug('appending version onto string');
@@ -27,13 +42,13 @@ function moduleToObject(str, version, options) {
   }
 
   // first try with regular git urls
-  var gitObject = looksLikeUrl(str);
+  const gitObject = looksLikeUrl(str);
   if (gitObject) {
     // then the string looks like a url, let's try to parse it
     return supported(str, fromGitObject(gitObject), options);
   }
 
-  var parts = str.split('@');
+  let parts = str.split('@');
 
   if (str.indexOf('@') === 0) {
     // put the scoped package name back together
@@ -42,18 +57,19 @@ function moduleToObject(str, version, options) {
   }
 
   // then as a backup, try pkg@giturl
-  gitObject = parts[1] && looksLikeUrl(parts[1]);
+  const maybeGitObject = parts[1] && looksLikeUrl(parts[1]);
 
-  if (gitObject) {
+  if (maybeGitObject) {
     // then the string looks like a url, let's try to parse it
-    return supported(str, fromGitObject(gitObject, parts[0]), options);
+    return supported(str, fromGitObject(maybeGitObject), options);
   }
 
-  if (parts.length === 1) { // no version
+  if (parts.length === 1) {
+    // no version
     parts.push('*');
   }
 
-  var module = {
+  const module = {
     name: parts[0],
     version: parts.slice(1).join('@'),
   };
@@ -61,21 +77,24 @@ function moduleToObject(str, version, options) {
   return supported(str, module, options);
 }
 
-function looksLikeUrl(str) {
+// git host from URL
+function looksLikeUrl(str: string): gitHost {
   if (str.slice(-1) === '/') {
     // strip the trailing slash since we can't parse it properly anyway
     str = str.slice(0, -1);
   }
 
-  if (str.toLowerCase().indexOf('://github.com/') !== -1 &&
-      str.indexOf('http') === 0) {
+  if (
+    str.toLowerCase().indexOf('://github.com/') !== -1 &&
+    str.indexOf('http') === 0
+  ) {
     // attempt to get better compat with our parser by stripping the github
     // and url parts
     // examples:
     // - https://github.com/Snyk/snyk/releases/tag/v1.14.2
     // - https://github.com/Snyk/vulndb/tree/snapshots
     // - https://github.com/Snyk/snyk/commit/75477b18
-    var parts = str.replace(/https?:\/\/github.com\//, '').split('/');
+    const parts = str.replace(/https?:\/\/github.com\//, '').split('/');
     str = parts.shift() + '/' + parts.shift();
 
     if (parts.length) {
@@ -83,25 +102,23 @@ function looksLikeUrl(str) {
     }
   }
 
-  var obj = gitHost.fromUrl(str);
+  const obj = gitHost.fromUrl(str);
 
   return obj;
 }
 
-function fromGitObject(obj) {
-  var error = false;
-
+function fromGitObject(obj: gitHost) {
   // debug('parsed from hosted-git-info');
 
   /* istanbul ignore if */
   if (!obj.project || !obj.user) {
     // this should never actually occur
-    error = new Error('not supported: failed to fully parse');
-    error.code = 501;
+    const error = new Error('not supported: failed to fully parse');
+    (error as any).code = 501;
     throw error;
   }
 
-  var module = {
+  const module = {
     name: obj.project,
     version: obj.user + '/' + obj.project,
   };
@@ -113,16 +130,14 @@ function fromGitObject(obj) {
   return module;
 }
 
-function encode(name) {
+export function encode(name: string) {
   return name[0] + encodeURIComponent(name.slice(1));
 }
 
-function supported(str, module, options) {
+function supported(str: string, module: Package, options?: Options) {
   if (!options) {
     options = {};
   }
-
-  var error;
 
   if (options.packageManager === 'maven') {
     if (str.indexOf(':') === -1) {
@@ -131,9 +146,8 @@ function supported(str, module, options) {
     return module;
   }
 
-  var protocolMatch = module.version.match(/^(https?:)|(git[:+])/i);
-  if (protocolMatch ||
-      module.name.indexOf('://') !== -1) {
+  const protocolMatch = module.version.match(/^(https?:)|(git[:+])/i);
+  if (protocolMatch || module.name.indexOf('://') !== -1) {
     // we don't support non-npm modules atm
     debug('not supported %s@%s (ext)', module.name, module.version);
     if (options.loose) {
@@ -143,27 +157,20 @@ function supported(str, module, options) {
     }
   }
 
-  if (error) {
-    error.code = 501; // not implemented
-    throw error;
-  }
-
   if (module.version === 'latest' || !module.version) {
     module.version = '*';
   }
 
-  debug('%s => { name: "%s", version: "%s" }',
-    str, module.name, module.version);
+  debug(
+    '%s => { name: "%s", version: "%s" }',
+    str,
+    module.name,
+    module.version
+  );
 
   return module;
 }
 
-function toString(module) {
+function toString(module: Package) {
   return module.name + '@' + module.version;
-}
-
-/* istanbul ignore if */
-if (!module.parent) {
-  // support simple cli testing
-  console.log(moduleToObject(process.argv[2], { loose: false }));
 }
