@@ -1,8 +1,8 @@
 {
   "name": "snyk-module",
   "description": "Snyk module helper",
-  "main": "dist/lib/index.js",
-  "types": "dist/lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "test": "test"
   },
