@@ -36,6 +36,16 @@ export function parsePackageString(
 
   let str = nameAndMaybeVersion;
 
+  // first, try the common case; there's no version, and it's a normal package name
+  if (!version) {
+    // foo, foo-bar, @foo/bar, com.example:test
+    // none of these can be URLs, or versions
+    const fastPath = /^(?:(?:[a-z-]+)|(?:@[a-z-]+\/[a-z-]+)|(?:[a-z-]+\.[.a-z-]+:[a-z-]+))$/;
+    if (fastPath.test(str)) {
+      return supported(str, { name: str, version: '*' }, options);
+    }
+  }
+
   if (version && str.lastIndexOf('@') < 1) {
     debug('appending version onto string');
     str += '@' + version;
