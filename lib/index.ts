@@ -88,7 +88,7 @@ export function parsePackageString(
 }
 
 // git host from URL
-function looksLikeUrl(str: string): gitHost {
+function looksLikeUrl(str: string): gitHost | undefined {
   if (str.slice(-1) === '/') {
     // strip the trailing slash since we can't parse it properly anyway
     str = str.slice(0, -1);

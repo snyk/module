@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "hosted-git-info": "^3.0.4"
+    "hosted-git-info": "^4.0.2"
   }
 }
