@@ -1,6 +1,8 @@
 const debug = require('debug')('snyk:module');
 import * as gitHost from 'hosted-git-info';
 
+debug.log = console.error.bind(console);
+
 interface Package {
   name: string;
   version: string;
