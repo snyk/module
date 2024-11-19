@@ -3,24 +3,75 @@ version: 2.1
 orbs:
   prodsec: snyk/prodsec-orb@1
 
-jobs:
-  security-scans:
-    resource_class: small
-    docker:
-      - image: cimg/node:22.2.0
+defaults: &defaults
+  resource_class: small
+  docker:
+    - image: cimg/node:21.7.3
+  working_directory: ~/module
+
+
+commands:
+  setup_snyk_npm_user:
     steps:
-      - checkout
       - run:
-          name: Use snyk-main npmjs user
+          name: Create Snyk NPM credentials file
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+
+  install_dependencies:
+    steps:
       - run:
           name: Install dependencies
           command: npm install
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules/
+
+  checkout_and_install:
+    steps:
+      - checkout
+      - setup_snyk_npm_user
+      - install_dependencies
+
+jobs:
+  lint:
+    <<: *defaults
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: ~/module
+      - run:
+          name: Lint
+          command: npm run lint
+
+  security-scans:
+    <<: *defaults
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: ~/module
       - prodsec/security_scans:
           mode: auto
           release-branch: master
           open-source-additional-arguments: --exclude=test
           iac-scan: disabled
+  test:
+    <<: *defaults
+    steps:
+      - checkout_and_install
+      - attach_workspace:
+          at: ~/module
+      - run:
+          name: Run tests
+          command: npm run test
+
+  release:
+    <<: *defaults
+    steps:
+      - checkout_and_install
+      - run:
+          name: Release on GitHub
+          command: npx semantic-release@22.0.0
 
 workflows:
   version: 2
@@ -41,3 +92,37 @@ workflows:
           context:
             - open_source-managed
             - nodejs-install
+          filters:
+            branches:
+              ignore:
+                - main
+
+      - lint:
+          name: Lint
+          context:
+            - nodejs-install
+          filters:
+            branches:
+              ignore:
+                - master
+
+      - test:
+          name: Test
+          context:
+            - snyk-docker-build
+            - nodejs-install
+          requires:
+            - Lint
+          filters:
+            branches:
+              ignore:
+                - master
+
+      - release:
+          name: Release
+          context:
+            - nodejs-lib-release
+          filters:
+            branches:
+              only:
+                - master
