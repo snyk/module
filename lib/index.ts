@@ -163,7 +163,7 @@ function supported(str: string, module: Package, options?: Options) {
     // we don't support non-npm modules atm
     debug('not supported %s@%s (ext)', module.name, module.version);
     if (options.loose) {
-      delete module.version;
+      module.version = '*';
     } else {
       debug('external module: ' + toString(module));
     }

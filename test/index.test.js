@@ -3,48 +3,40 @@ const mod = require('../lib').parsePackageString;
 mod.encode = require('../lib').encode;
 
 test('module string to object', (t) => {
-  t.deepEqual(
+  t.same(
     mod('nodemon'),
     { name: 'nodemon', version: '*' },
     'supports versionless'
   );
-  t.deepEqual(
+  t.same(
     mod('nodemon@latest'),
     { name: 'nodemon', version: '*' },
     'switches latest to *'
   );
-  t.deepEqual(
+  t.same(
     mod('nodemon@'),
     { name: 'nodemon', version: '*' },
     'always give a version'
   );
-  t.deepEqual(
-    mod('nodemon@1'),
-    { name: 'nodemon', version: '1' },
-    'with version'
-  );
-  t.deepEqual(
+  t.same(mod('nodemon@1'), { name: 'nodemon', version: '1' }, 'with version');
+  t.same(
     mod('nodemon@1.0'),
     { name: 'nodemon', version: '1.0' },
     'with version'
   );
-  t.deepEqual(
+  t.same(
     mod('nodemon@1.0.0'),
     { name: 'nodemon', version: '1.0.0' },
     'with version'
   );
 
-  t.deepEqual(
+  t.same(
     mod('@remy/snyk-module'),
     { name: '@remy/snyk-module', version: '*' },
     'private packages'
   );
-  t.deepEqual(
-    mod('jsbin', 1),
-    { name: 'jsbin', version: '1' },
-    'version arg works'
-  );
-  t.deepEqual(
+  t.same(mod('jsbin', 1), { name: 'jsbin', version: '1' }, 'version arg works');
+  t.same(
     mod('@remy/jsbin', 1),
     { name: '@remy/jsbin', version: '1' },
     'scoped with version arg works'
@@ -77,16 +69,16 @@ test('module string to object', (t) => {
   };
 
   urls.forEach((url) => {
-    t.deepEqual(mod(url), expect, url + ' works');
+    t.same(mod(url), expect, url + ' works');
   });
 
-  t.deepEqual(
+  t.same(
     mod('jsbin/jsbin'),
     { name: 'jsbin', version: 'jsbin/jsbin' },
     'short github works'
   );
 
-  t.deepEqual(
+  t.same(
     mod(urls[0] + '#123'),
     { name: 'undefsafe', version: 'remy/undefsafe#123' },
     'add hash correctly'
@@ -101,7 +93,7 @@ test('module string to object', (t) => {
   );
 
   // pkg names
-  t.deepEqual(
+  t.same(
     mod(
       'grunt-sails-linker@git://github.com/Zolmeister/grunt-sails-linker.git'
     ),
@@ -113,19 +105,19 @@ test('module string to object', (t) => {
   );
 
   // privately hosted git repo is supported
-  t.deepEqual(
+  t.same(
     mod('ikt@git+http://ikt.pm2.io/ikt.git#master'),
     { name: 'ikt', version: 'git+http://ikt.pm2.io/ikt.git#master' },
     'external git repo is supported'
   );
 
-  t.deepEqual(
+  t.same(
     mod('ikt@git+ssh://git@ikt.pm2.io/ikt.git#master'),
     { name: 'ikt', version: 'git+ssh://git@ikt.pm2.io/ikt.git#master' },
     'external git repo with ssh is supported'
   );
 
-  t.deepEqual(
+  t.same(
     mod('@scope/ikt@git+ssh://git@ikt.pm2.io/ikt.git#master'),
     { name: '@scope/ikt', version: 'git+ssh://git@ikt.pm2.io/ikt.git#master' },
     'scoped package with git repo is supported'
@@ -137,7 +129,7 @@ test('module string to object', (t) => {
 test('loose parsing', (t) => {
   const opts = { loose: true };
 
-  t.deepEqual(
+  t.same(
     mod(
       'grunt-sails-linker@git://github.com/Zolmeister/grunt-sails-linker.git',
       opts
@@ -150,7 +142,7 @@ test('loose parsing', (t) => {
   );
 
   // privately hosted git repo not supported
-  t.deepEqual(
+  t.same(
     mod('ikt@git+http://ikt.pm2.io/ikt.git#master', opts),
     { name: 'ikt', version: '*' },
     'loose allows non-supported parsing'
@@ -178,7 +170,7 @@ test('vanilla urls from github', (t) => {
   ];
 
   urls.forEach((url, i) => {
-    t.deepEqual(mod(url), expect[i], url + ' works');
+    t.same(mod(url), expect[i], url + ' works');
   });
 
   t.end();
@@ -197,22 +189,22 @@ test('Maven modules', (t) => {
 
   t.equal(mod.encode(packageName), groupId + '%3A' + artifactId);
 
-  t.deepEqual(mod(packageName, { packageManager: 'maven' }), {
+  t.same(mod(packageName, { packageManager: 'maven' }), {
     name: packageName,
     version: '*',
   });
 
-  t.deepEqual(mod(packageName, '3.4.5', { packageManager: 'maven' }), {
+  t.same(mod(packageName, '3.4.5', { packageManager: 'maven' }), {
     name: packageName,
     version: '3.4.5',
   });
 
-  t.deepEqual(mod(packageName, '3.4.5-SNAPSHOT', { packageManager: 'maven' }), {
+  t.same(mod(packageName, '3.4.5-SNAPSHOT', { packageManager: 'maven' }), {
     name: packageName,
     version: '3.4.5-SNAPSHOT',
   });
 
-  t.deepEqual(mod(packageName + '@3.4.5', { packageManager: 'maven' }), {
+  t.same(mod(packageName + '@3.4.5', { packageManager: 'maven' }), {
     name: packageName,
     version: '3.4.5',
   });
