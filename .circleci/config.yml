@@ -6,9 +6,8 @@ orbs:
 defaults: &defaults
   resource_class: small
   docker:
-    - image: cimg/node:21.7.3
+    - image: cimg/node:24.16
   working_directory: ~/module
-
 
 commands:
   setup_snyk_npm_user:
@@ -71,7 +70,9 @@ jobs:
       - checkout_and_install
       - run:
           name: Release on GitHub
-          command: npx semantic-release@22.0.0
+          command: |
+            export NPM_ID_TOKEN=$(circleci run oidc get --claims '{"aud": "npm:registry.npmjs.org"}')
+            npx semantic-release@25.0.3
 
 workflows:
   version: 2
@@ -92,10 +93,6 @@ workflows:
           context:
             - open_source-managed
             - nodejs-install
-          filters:
-            branches:
-              ignore:
-                - main
 
       - lint:
           name: Lint
@@ -111,17 +108,14 @@ workflows:
           context:
             - snyk-docker-build
             - nodejs-install
-          requires:
-            - Lint
-          filters:
-            branches:
-              ignore:
-                - master
 
       - release:
           name: Release
           context:
-            - nodejs-lib-release
+            - github-release
+            - nodejs-install
+          requires:
+            - Test
           filters:
             branches:
               only:
