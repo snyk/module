@@ -1,8 +1,7 @@
 node_modules
-.nyc_output
-.tap
 dist
 .eslintcache
 package-lock.json
 dist/
 /.idea/
+coverage/
