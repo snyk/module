@@ -6,9 +6,22 @@
   "directories": {
     "test": "test"
   },
+  "files": [
+    "dist/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/snyk/module.git"
+  },
+  "homepage": "https://github.com/snyk/module#readme",
+  "bugs": {
+    "url": "https://github.com/snyk/module/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=8"
   },
   "scripts": {
     "build": "tsc",

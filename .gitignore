@@ -4,3 +4,4 @@ dist
 .eslintcache
 package-lock.json
 dist/
+/.idea/
