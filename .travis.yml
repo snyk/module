@@ -6,9 +6,9 @@ cache:
 notifications:
   email: false
 node_js:
-  - '12'
-  - '10'
-  - '8'
+  - '22'
+  - '24'
+  - '26'
 install:
   - npm install
 script:
@@ -16,7 +16,7 @@ script:
 jobs:
   include:
     - stage: Release
-      node_js: '10'
+      node_js: '22'
       script:
       - test "${TRAVIS_PULL_REQUEST}" != "false" || npx semantic-release
 branches:

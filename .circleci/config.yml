@@ -6,7 +6,7 @@ orbs:
 defaults: &defaults
   resource_class: small
   docker:
-    - image: cimg/node:24.16
+    - image: cimg/node:22
   working_directory: ~/module
 
 commands:
@@ -56,6 +56,11 @@ jobs:
           iac-scan: disabled
   test:
     <<: *defaults
+    parameters:
+      node_version:
+        type: string
+    docker:
+      - image: cimg/node:<< parameters.node_version >>
     steps:
       - checkout_and_install
       - attach_workspace:
@@ -106,10 +111,14 @@ workflows:
                 - master
 
       - test:
-          name: Test
+          name: Test Node=<< matrix.node_version >>
           context:
             - snyk-docker-build
             - nodejs-install
+          matrix:
+            alias: Test
+            parameters:
+              node_version: ['22', '24', '26']
 
       - release:
           name: Release
