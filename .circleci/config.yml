@@ -6,7 +6,7 @@ orbs:
 defaults: &defaults
   resource_class: small
   docker:
-    - image: cimg/node:24.16
+    - image: cimg/node:24  # npm 11+ (Node 24) is needed for OIDC trusted publishing
   working_directory: ~/module
 
 commands:
@@ -56,6 +56,8 @@ jobs:
           iac-scan: disabled
   test:
     <<: *defaults
+    docker:
+      - image: cimg/node:22  # tests run on the oldest supported Node.js
     steps:
       - checkout_and_install
       - attach_workspace:
