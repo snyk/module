@@ -149,7 +149,7 @@ describe('vanilla urls from github', () => {
 
   it.each(cases)(
     '$url works',
-    ({ url, exp }: { url: string; exp: typeof expected[number] }) => {
+    ({ url, exp }: { url: string; exp: (typeof expected)[number] }) => {
       expect(mod(url)).toEqual(exp);
     }
   );

@@ -42,7 +42,8 @@ export function parsePackageString(
   if (!version) {
     // foo, foo-bar, @foo/bar, com.example:test
     // none of these can be URLs, or versions
-    const fastPath = /^(?:(?:[a-z-]+)|(?:@[a-z-]+\/[a-z-]+)|(?:[a-z-]+\.[.a-z-]+:[a-z-]+))$/;
+    const fastPath =
+      /^(?:(?:[a-z-]+)|(?:@[a-z-]+\/[a-z-]+)|(?:[a-z-]+\.[.a-z-]+:[a-z-]+))$/;
     if (fastPath.test(str)) {
       return supported(str, { name: str, version: '*' }, options);
     }
