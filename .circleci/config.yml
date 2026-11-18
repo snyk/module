@@ -20,7 +20,7 @@ commands:
     steps:
       - run:
           name: Install dependencies
-          command: npm install
+          command: npm ci
       - persist_to_workspace:
           root: .
           paths:

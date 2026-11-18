@@ -10,7 +10,7 @@ node_js:
   - '24'
   - '26'
 install:
-  - npm install
+  - npm ci
 script:
   - npm test
 jobs:
